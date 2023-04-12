@@ -1,0 +1,42 @@
+version: '3.8'
+
+services: 
+  database:
+    build: 
+      context: ./backend
+      target: postgres
+    container_name: inventory-database
+    volumes:
+      - db-storage:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mrc201
+  backend:
+    container_name: inventory-backend
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    build:
+      context: ./backend
+      target: fastify
+    ports:
+      - 3000:3000
+    command: bash -c "npx prisma db push && npx prisma generate && npm run dev"
+  frontend:
+    container_name: inventory-frontend
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/usr/src/web
+      - /usr/src/web/node_modules
+    build:
+      context: ./frontend
+      target: react
+    ports:
+      - 5173:5173
+    command: "npm run dev"
+
+
+volumes:
+  db-storage:

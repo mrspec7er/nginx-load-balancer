@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc-p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node -- ./index.ts",
+    "dev": "nodemon -r --legacy-watch ./index.ts"
+  },
+  "keywords": [],
+  "author": "mrspec7er",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^8.2.1",
+    "@prisma/client": "^4.12.0",
+    "dotenv": "^16.0.3",
+    "fast-jwt": "^2.2.1",
+    "fastify": "^4.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "nodemon": "^2.0.22",
+    "prisma": "^4.12.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
