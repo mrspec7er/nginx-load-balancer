@@ -1,10 +1,12 @@
 FROM node:18-alpine as react
 
-COPY . /usr/src/web
-
 WORKDIR /usr/src/web
 
+COPY package.json .
+
 RUN npm install
+
+COPY . .
 
 RUN apk update && apk add bash
 

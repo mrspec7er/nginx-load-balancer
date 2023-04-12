@@ -3,11 +3,13 @@ WORKDIR /usr/db
 
 FROM node:18-alpine as fastify
 
-COPY . /usr/src/app
-
 WORKDIR /usr/src/app
 
+COPY package.json .
+
 RUN npm install
+
+COPY . .
 
 RUN apk update && apk add bash
 
