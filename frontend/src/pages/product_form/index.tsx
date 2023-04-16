@@ -6,6 +6,7 @@ import AlertWarning from "../../components/AlertWarning";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import fetchData from "../../utils/fetchData";
 import Loading from "../../components/Loading";
+import { useStockStore } from "../../utils/stockStore";
 
 enum UnitOptionType {
   SHEET = "SHEET",
@@ -40,6 +41,8 @@ const ProductForm = () => {
     mutationFn: (body: object) =>
       mutateFetch("/products/" + id, body, "DELETE"),
   });
+
+  const { removeStockProduct } = useStockStore();
 
   const handleSubmit = async () => {
     setShowConfirmModal(false);
@@ -90,6 +93,7 @@ const ProductForm = () => {
       .mutateAsync(body)
       .then((res) => {
         console.log("MUTATION_SUCCESS: ", res);
+        removeStockProduct(id!);
 
         queryClientMutation.invalidateQueries({ queryKey: ["products"] });
         navigate("/");

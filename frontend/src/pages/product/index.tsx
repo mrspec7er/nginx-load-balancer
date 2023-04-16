@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import fetchData from "../../utils/fetchData";
-import { TbEdit } from "react-icons/tb";
+import { TbEdit, TbPlus } from "react-icons/tb";
 
 import TableHeader from "./TableHeader";
 import Loading from "../../components/Loading";
 import ConfirmModal from "../../components/ConfirmModal";
 import Pagination from "./Pagination";
 import { Link } from "react-router-dom";
+
+import { useStockStore } from "../../utils/stockStore";
 
 enum UnitOptionType {
   SHEET = "SHEET",
@@ -38,11 +40,13 @@ const Product = () => {
       ),
   });
 
-  console.log(query);
-
   const handleDeleteData = async () => {
     console.log("data with id: " + " have been deleted");
   };
+
+  const { stock, increaseStock } = useStockStore();
+
+  // const addNewStock = useStockStore((state) => state.increaseStock(10));
   return (
     <div className="mx-5">
       <TableHeader
@@ -72,6 +76,9 @@ const Product = () => {
                   Description
                 </th>
                 <th scope="col" className="py-3 px-6">
+                  Stock
+                </th>
+                <th scope="col" className="py-3 px-6">
                   Unit
                 </th>
                 <th scope="col" className="py-3 px-6">
@@ -97,8 +104,14 @@ const Product = () => {
                     Rp. {new Intl.NumberFormat("id-ID").format(i.price)}
                   </td>
                   <td className="py-4 px-6 max-w-sm">{i.desc}</td>
+                  <td className="py-4 px-6">
+                    {stock.find((x) => x.id === i.id)?.qty ?? 0}
+                  </td>
                   <td className="py-4 px-6">{i.unitOption}</td>
-                  <td className="py-4 px-6 text-right">
+                  <td className="py-4 px-6 text-right flex items-center gap-5">
+                    <button onClick={() => increaseStock(10, i.id)}>
+                      <TbPlus className="text-2xl font-semibold hover:text-orange hover:scale-150" />
+                    </button>
                     <Link to={"/form/" + i.id}>
                       <TbEdit className="text-2xl font-semibold hover:text-orange hover:scale-150" />
                     </Link>
