@@ -26,9 +26,16 @@ services:
     build:
       context: ./backend
       target: fastify
-    ports:
-      - 3000:3000
     command: bash -c "npx prisma db push && npx prisma generate && npm run dev"
+  nginx:
+    container_name: inventory-nginx
+    restart: always
+    depends_on:
+      - database
+    build:
+      context: ./nginx
+    ports:
+      - 8000:80
   frontend:
     container_name: inventory-frontend
     depends_on:
