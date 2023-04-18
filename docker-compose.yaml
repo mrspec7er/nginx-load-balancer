@@ -46,9 +46,7 @@ services:
     build:
       context: ./frontend
       target: react
-    ports:
-      - 5173:5173
-    command: "npm run dev"
+    command: npm run dev
 
 
 volumes:
