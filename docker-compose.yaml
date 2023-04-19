@@ -1,6 +1,7 @@
 version: '3.8'
 
 services: 
+
   database:
     build: 
       context: ./backend
@@ -15,6 +16,7 @@ services:
       interval: 5s
       timeout: 25s
       retries: 5
+
   backend:
     container_name: inventory-backend
     depends_on:
@@ -27,15 +29,32 @@ services:
       context: ./backend
       target: fastify
     command: bash -c "npx prisma db push && npx prisma generate && npm run dev"
+
+  backend-n2:
+    container_name: inventory-backend-n2
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    build:
+      context: ./backend
+      target: fastify
+    command: bash -c "npx prisma generate && npm run dev"
+
   nginx:
     container_name: inventory-nginx
     restart: always
     depends_on:
-      - database
+      - frontend
+      - backend
+      - backend-n2
     build:
       context: ./nginx
     ports:
       - 8000:80
+
   frontend:
     container_name: inventory-frontend
     depends_on:
